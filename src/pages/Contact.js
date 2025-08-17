@@ -2,7 +2,7 @@ function Contact() {
   // Fonction pour ouvrir WhatsApp avec un message prédéfini
   const openWhatsApp = () => {
     // Numéro fictif - à remplacer par le vrai numéro
-    const phoneNumber = "+21612345678";
+    const phoneNumber = "+21652364988";
     const message = "Bonjour, je suis intéressé(e) par vos créations en bois d'olivier.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
