@@ -1,6 +1,6 @@
 import { products } from '../data/products';
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet";
 
 function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);

@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 function Contact() {
   // Fonction pour ouvrir WhatsApp avec un message prédéfini
   const openWhatsApp = () => {

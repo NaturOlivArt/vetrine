@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import acceuilImage from "../assets/images/acceuil.jpg";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 function Home() {
   return (
