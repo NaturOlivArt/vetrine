@@ -1,9 +1,18 @@
 import { Link } from "react-router-dom";
 import acceuilImage from "../assets/images/acceuil.jpg";
+import { Helmet } from "react-helmet-async";
 
 function Home() {
   return (
     <div>
+      <Helmet>
+        <title>NaturOliv Art | Artisanat tunisien en bois d'olivier</title>
+        <meta
+          name="description"
+          content="Atelier NaturOliv Art: créations artisanales en bois d'olivier. Pièces uniques, durables et naturelles, fabriquées en Tunisie."
+        />
+        <link rel="canonical" href="https://natureolivart.netlify.app/" />
+      </Helmet>
       {/* Hero / Bannière avec image en fond */}
       <section
         aria-label="Section d'accueil NaturOliv Art"

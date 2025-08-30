@@ -1,11 +1,50 @@
 import { products } from '../data/products';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Base du site (à ajuster si vous changez de domaine)
+  const baseUrl = "https://natureolivart.netlify.app";
+
+  // Convertit les URLs d’images en URLs absolues pour le JSON-LD
+  const toAbs = (u) => (u?.startsWith('http') ? u : `${baseUrl}${u || ''}`);
+
+  // Données structurées: liste de produits
+  const productStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": products.map((p, idx) => ({
+      "@type": "Product",
+      "name": p.name,
+      "description": p.description,
+      "image": (p.images || (p.image ? [p.image] : []))
+        .map((img) => toAbs(img)),
+      // Vous pouvez ajouter "offers" si vous affichez des prix en ligne
+      // "offers": {
+      //   "@type": "Offer",
+      //   "priceCurrency": "TND",
+      //   "price": Array.isArray(p.price) ? p.price[0] : p.price,
+      //   "availability": "https://schema.org/InStock"
+      // }
+    }))
+  };
+
   return (
     <div className="container mx-auto py-12 px-4">
+      <Helmet>
+        <title>Nos pièces artisanales en bois d’olivier | NaturOliv Art</title>
+        <meta
+          name="description"
+          content="Découvrez nos créations artisanales en bois d’olivier: cuillères à miel, ustensiles et pièces uniques fabriquées à la main."
+        />
+        <link rel="canonical" href={`${baseUrl}/products`} />
+        <script type="application/ld+json">
+          {JSON.stringify(productStructuredData)}
+        </script>
+      </Helmet>
+
       <h1 className="text-3xl font-bold mb-8 text-center text-wood-dark">Nos Pièces Artisanales</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
