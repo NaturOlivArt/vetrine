@@ -6,7 +6,7 @@ import img15 from '../assets/images/15cm.jpg';
 export const products = [
   {
     id: 1,
-    name: "Doseur de miel en bois d'olivier",
+    name: "Cuillère à Miel en bois d'olivier",
     images: [img10, img12, img15],
     sizes: ["10 cm", "12 cm", "15 cm"],
     price: [35, 45, 55],

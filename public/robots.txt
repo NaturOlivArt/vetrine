@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://natureolivart.netlify.app/sitemap.xml
