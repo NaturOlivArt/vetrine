@@ -4,7 +4,6 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Contact from "./pages/Contact";
-import { Helmet } from "react-helmet"; // On garde juste Helmet pour les pages
 
 function App() {
   return (
