@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useCart } from '../context/CartContext';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { count } = useCart();
 
   return (
     <nav className="bg-wood-dark text-white p-4">
@@ -30,6 +32,14 @@ function Navbar() {
           <Link to="/" className="hover:text-wood-medium transition duration-300">Accueil</Link>
           <Link to="/products" className="hover:text-wood-medium transition duration-300">Nos pièces</Link>
           <Link to="/contact" className="hover:text-wood-medium transition duration-300">Contact</Link>
+          <Link to="/cart" className="relative hover:text-wood-medium transition duration-300">
+            Panier
+            {count > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {count}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
       
@@ -57,6 +67,13 @@ function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               Contact
+            </Link>
+            <Link 
+              to="/cart" 
+              className="block px-3 py-2 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
+              onClick={() => setIsOpen(false)}
+            >
+              Panier {count > 0 ? `(${count})` : ""}
             </Link>
           </div>
         </div>
