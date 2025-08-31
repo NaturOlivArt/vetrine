@@ -12,22 +12,4 @@ export const products = [
     price: [35, 45, 55],
     description: "Élégant doseur de miel fabriqué à la main en bois d'olivier. Idéal pour servir le miel avec style."
   },
-  
-  // autres produits
-  // {
-  //   id: 2,
-  //   name: "Cuillère artisanale",
-  //   image: "/images/cuillere.jpg",
-  //   size: "20 cm",
-  //   price: 25,
-  //   description: "Cuillère en bois d'olivier, parfaite pour la cuisine ou comme objet décoratif."
-  // },
-  // {
-  //   id: 3,
-  //   name: "Planche à découper",
-  //   image: "/images/planche.jpg",
-  //   size: "30 x 20 cm",
-  //   price: 45,
-  //   description: "Planche à découper robuste en bois d'olivier, avec de belles veinures naturelles."
-  // }
 ];
