@@ -30,7 +30,9 @@ function ProductDetail() {
   // ✅ libellé de taille
   const sizeLabel = useMemo(() => {
     if (!product) return null;
-    return Array.isArray(product.sizes) ? product.sizes[sizeIndex] : product.size;
+    return Array.isArray(product.sizes)
+      ? product.sizes[sizeIndex]
+      : product.size;
   }, [product, sizeIndex]);
 
   // ❌ si pas de produit
@@ -38,7 +40,10 @@ function ProductDetail() {
     return (
       <div className="container mx-auto py-12 px-4">
         <p className="text-xl">Produit introuvable.</p>
-        <Link to="/products" className="text-wood-dark hover:underline mt-4 inline-block">
+        <Link
+          to="/products"
+          className="text-wood-dark hover:underline mt-4 inline-block"
+        >
           ← Retour aux produits
         </Link>
       </div>
@@ -61,8 +66,12 @@ function ProductDetail() {
 
         {/* Titre + description à droite */}
         <div>
-          <h1 className="text-3xl font-bold text-wood-dark mb-2">{product.name}</h1>
-          {sizeLabel && <p className="text-gray-600 mb-4">Taille: {sizeLabel}</p>}
+          <h1 className="text-3xl font-bold text-wood-dark mb-2">
+            {product.name}
+          </h1>
+          {sizeLabel && (
+            <p className="text-gray-600 mb-4">Taille: {sizeLabel}</p>
+          )}
           <p className="text-gray-700 mb-6">{product.description}</p>
 
           <div className="flex items-center gap-3 mb-6">
@@ -71,13 +80,17 @@ function ProductDetail() {
               type="number"
               min={1}
               value={qty}
-              onChange={(e) => setQty(Math.max(1, parseInt(e.target.value || "1", 10)))}
+              onChange={(e) =>
+                setQty(Math.max(1, parseInt(e.target.value || "1", 10)))
+              }
               className="w-24 border border-gray-300 rounded px-2 py-1"
             />
           </div>
 
           <button
-            onClick={() => addItem(product, qty, { sizeLabel, image: currentImage })}
+            onClick={() =>
+              addItem(product, qty, { sizeLabel, image: currentImage })
+            }
             className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90 transition duration-300 mr-4"
           >
             Ajouter au panier

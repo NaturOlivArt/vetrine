@@ -36,7 +36,7 @@ export function CartProvider({ children }) {
       return [
         ...prev,
         {
-          uid,             // identifiant unique (produit + taille)
+          uid, // identifiant unique (produit + taille)
           productId: product.id,
           name: product.name,
           size: sizeLabel || null,

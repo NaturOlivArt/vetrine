@@ -10,9 +10,12 @@ function Cart() {
   const cartText = useMemo(() => {
     if (items.length === 0) return "Panier vide.";
     const lines = items.map(
-      (it, i) => `${i + 1}) ${it.name}${it.size ? ` (${it.size})` : ""} x${it.qty}`
+      (it, i) =>
+        `${i + 1}) ${it.name}${it.size ? ` (${it.size})` : ""} x${it.qty}`
     );
-    return `Commande NaturOliv Art:\n${lines.join("\n")}\nTotal articles: ${count}`;
+    return `Commande NaturOliv Art:\n${lines.join(
+      "\n"
+    )}\nTotal articles: ${count}`;
   }, [items, count]);
 
   const [contactMethod, setContactMethod] = useState("email"); // 'email' | 'whatsapp'
@@ -30,7 +33,9 @@ function Cart() {
       `Nom: ${nom}\nEmail: ${email}\nTéléphone: ${phone}\n` +
       `Message: ${message}`;
 
-    const url = `https://wa.me/${VOTRE_NUMERO_WHATSAPP}?text=${encodeURIComponent(finalText)}`;
+    const url = `https://wa.me/${VOTRE_NUMERO_WHATSAPP}?text=${encodeURIComponent(
+      finalText
+    )}`;
     window.open(url, "_blank");
   };
 
@@ -49,11 +54,21 @@ function Cart() {
 
       <div className="space-y-4 mb-10">
         {items.map((it) => (
-          <div key={it.uid} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center bg-white p-4 rounded shadow">
-            <img src={it.image} alt={it.name} className="w-full h-40 object-cover rounded" />
+          <div
+            key={it.uid}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center bg-white p-4 rounded shadow"
+          >
+            <img
+              src={it.image}
+              alt={it.name}
+              className="w-full h-40 object-cover rounded"
+            />
             <div>
               <h2 className="text-xl font-semibold text-wood-dark">
-                {it.name} {it.size ? <span className="text-gray-600 text-base">({it.size})</span> : null}
+                {it.name}{" "}
+                {it.size ? (
+                  <span className="text-gray-600 text-base">({it.size})</span>
+                ) : null}
               </h2>
               <div className="mt-2 flex items-center gap-3">
                 <label>Quantité</label>
@@ -61,7 +76,12 @@ function Cart() {
                   type="number"
                   min={1}
                   value={it.qty}
-                  onChange={(e) => updateQty(it.uid, Math.max(1, parseInt(e.target.value || "1", 10)))}
+                  onChange={(e) =>
+                    updateQty(
+                      it.uid,
+                      Math.max(1, parseInt(e.target.value || "1", 10))
+                    )
+                  }
                   className="w-24 border border-gray-300 rounded px-2 py-1"
                 />
               </div>
@@ -79,11 +99,20 @@ function Cart() {
       </div>
 
       <div className="mb-6 flex items-center justify-between">
-        <p className="text-lg">Total articles: <span className="font-semibold">{count}</span></p>
-        <button onClick={clear} className="text-sm text-red-600 hover:underline">Vider le panier</button>
+        <p className="text-lg">
+          Total articles: <span className="font-semibold">{count}</span>
+        </p>
+        <button
+          onClick={clear}
+          className="text-sm text-red-600 hover:underline"
+        >
+          Vider le panier
+        </button>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4 text-wood-dark">Vos informations</h2>
+      <h2 className="text-2xl font-bold mb-4 text-wood-dark">
+        Vos informations
+      </h2>
 
       <form
         action={`https://formsubmit.co/${VOTRE_EMAIL_FORMSUBMIT}`}
@@ -92,7 +121,11 @@ function Cart() {
         className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded shadow"
       >
         {/* Formsubmit configuration */}
-        <input type="hidden" name="_subject" value="Nouvelle commande NaturOliv Art" />
+        <input
+          type="hidden"
+          name="_subject"
+          value="Nouvelle commande NaturOliv Art"
+        />
         <input type="hidden" name="_template" value="table" />
         <input type="hidden" name="panier" value={cartText} />
 
@@ -121,11 +154,20 @@ function Cart() {
 
         <div>
           <label className="block text-sm mb-1">Nom</label>
-          <input name="nom" required className="w-full border rounded px-3 py-2" />
+          <input
+            name="nom"
+            required
+            className="w-full border rounded px-3 py-2"
+          />
         </div>
         <div>
           <label className="block text-sm mb-1">Email</label>
-          <input name="email" type="email" required={contactMethod === "email"} className="w-full border rounded px-3 py-2" />
+          <input
+            name="email"
+            type="email"
+            required={contactMethod === "email"}
+            className="w-full border rounded px-3 py-2"
+          />
         </div>
         <div>
           <label className="block text-sm mb-1">Téléphone</label>
@@ -133,16 +175,26 @@ function Cart() {
         </div>
         <div>
           <label className="block text-sm mb-1">Message</label>
-          <textarea name="message" rows="4" className="w-full border rounded px-3 py-2" />
+          <textarea
+            name="message"
+            rows="4"
+            className="w-full border rounded px-3 py-2"
+          />
         </div>
 
         <div className="md:col-span-2">
           {contactMethod === "email" ? (
-            <button type="submit" className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90">
+            <button
+              type="submit"
+              className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90"
+            >
               Envoyer la commande par Email
             </button>
           ) : (
-            <button type="submit" className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700"
+            >
               Ouvrir WhatsApp et envoyer
             </button>
           )}
