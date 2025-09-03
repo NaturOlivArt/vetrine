@@ -7,7 +7,7 @@ function Navbar() {
   const { count } = useCart();
 
   return (
-    <nav className="bg-wood-dark text-white p-4">
+    <nav className="bg-wood-dark text-white p-1">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold">
           NaturOliv Art

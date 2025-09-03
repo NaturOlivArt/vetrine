@@ -8,6 +8,7 @@ function ProductDetail() {
   const [searchParams] = useSearchParams();
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
+  const [showToast, setShowToast] = useState(false);
 
   const product = products.find((p) => String(p.id) === String(id));
 
@@ -61,50 +62,93 @@ function ProductDetail() {
     );
   }
 
+  // Contrôles quantité
+  const inc = () => setQty((q) => q + 1);
+  const dec = () => setQty((q) => Math.max(1, q - 1));
+
+  // Ajout au panier + toast
+  const handleAddToCart = () => {
+    addItem(product, qty, { sizeLabel, image: currentImage });
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   return (
-    <div className="container mx-auto py-12 px-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Image à gauche */}
-        <div>
-          {currentImage && (
-            <img
-              src={currentImage}
-              alt={product.name}
-              className="w-full h-auto rounded-lg shadow-lg object-cover"
-            />
-          )}
+    <>
+      {showToast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-4 right-4 z-50 bg-green-600 text-white px-4 py-2 rounded shadow-lg"
+        >
+          Article ajouté au panier
         </div>
-
-        {/* Titre + description à droite */}
-        <div>
-          <h1 className="text-3xl font-bold text-wood-dark mb-2">{product.name}</h1>
-          {sizeLabel && <p className="text-gray-600 mb-4">Taille: {sizeLabel}</p>}
-          <p className="text-gray-700 mb-6">{product.description}</p>
-
-          <div className="flex items-center gap-3 mb-6">
-            <label className="text-gray-700">Quantité</label>
-            <input
-              type="number"
-              min={1}
-              value={qty}
-              onChange={(e) => setQty(Math.max(1, parseInt(e.target.value || "1", 10)))}
-              className="w-24 border border-gray-300 rounded px-2 py-1"
-            />
+      )}
+      <div className="container mx-auto py-12 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Image à gauche */}
+          <div>
+            {currentImage && (
+              <img
+                src={currentImage}
+                alt={product.name}
+                className="w-full h-auto rounded-lg shadow-lg object-cover"
+              />
+            )}
           </div>
 
-          <button
-            onClick={() => addItem(product, qty, { sizeLabel, image: currentImage })}
-            className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90 transition duration-300 mr-4"
-          >
-            Ajouter au panier
-          </button>
+          {/* Titre + description à droite */}
+          <div>
+            <h1 className="text-3xl font-bold text-wood-dark mb-2">{product.name}</h1>
+            {sizeLabel && <p className="text-gray-600 mb-4">Taille: {sizeLabel}</p>}
+            <p className="text-gray-700 mb-6">{product.description}</p>
 
-          <Link to="/cart" className="text-wood-dark hover:underline">
-            Voir le panier →
-          </Link>
+            <div className="flex items-center gap-3 mb-6">
+              <label className="text-gray-700">Quantité</label>
+              <div className="inline-flex items-stretch border border-gray-300 rounded overflow-hidden">
+                <button
+                  type="button"
+                  onClick={dec}
+                  className="px-3 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  aria-label="Diminuer la quantité"
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  min={1}
+                  value={qty}
+                  onChange={(e) =>
+                    setQty(Math.max(1, parseInt(e.target.value || "1", 10)))
+                  }
+                  className="w-16 text-center outline-none"
+                  aria-label="Quantité"
+                />
+                <button
+                  type="button"
+                  onClick={inc}
+                  className="px-3 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  aria-label="Augmenter la quantité"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <button
+              onClick={handleAddToCart}
+              className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90 transition duration-300 mr-4"
+            >
+              Ajouter au panier
+            </button>
+
+            <Link to="/cart" className="text-wood-dark hover:underline">
+              Voir le panier →
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

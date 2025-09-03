@@ -72,18 +72,34 @@ function Cart() {
               </h2>
               <div className="mt-2 flex items-center gap-3">
                 <label>Quantité</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={it.qty}
-                  onChange={(e) =>
-                    updateQty(
-                      it.uid,
-                      Math.max(1, parseInt(e.target.value || "1", 10))
-                    )
-                  }
-                  className="w-24 border border-gray-300 rounded px-2 py-1"
-                />
+                <div className="flex items-center border rounded">
+                  <button
+                    type="button"
+                    onClick={() => updateQty(it.uid, Math.max(1, it.qty - 1))}
+                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-l"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={it.qty}
+                    onChange={(e) =>
+                      updateQty(
+                        it.uid,
+                        Math.max(1, parseInt(e.target.value || "1", 10))
+                      )
+                    }
+                    className="w-16 text-center border-l border-r"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => updateQty(it.uid, it.qty + 1)}
+                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-r"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
             <div className="flex md:justify-end">
