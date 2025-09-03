@@ -2,24 +2,42 @@ import { useParams, useSearchParams, Link } from "react-router-dom";
 import { products } from "../data/products";
 import { useState, useMemo } from "react";
 import { useCart } from "../context/CartContext";
+import { Helmet } from "react-helmet";
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { id, slug } = useParams();
   const [searchParams] = useSearchParams();
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
   const [showToast, setShowToast] = useState(false);
 
-  const product = products.find((p) => String(p.id) === String(id));
+  // Trouver le produit par slug ou id
+  const productFromSlug = useMemo(() => {
+    if (!slug) return null;
+    return products.find(
+      (p) => p.slug === slug || (Array.isArray(p.variantSlugs) && p.variantSlugs.includes(slug))
+    );
+  }, [slug]);
 
-  // ✅ calcul variant robuste (index numérique ou libellé, et bornage)
+  const product = productFromSlug || products.find((p) => String(p.id) === String(id));
+
+  // Déduire l'index de variante (via slug en priorité), sinon query ?size=, sinon 0
   const sizeInfo = useMemo(() => {
     if (!product) return { index: 0, label: null };
-
+    // 1) via slug exact
+    if (slug && Array.isArray(product.variantSlugs)) {
+      const i = product.variantSlugs.indexOf(slug);
+      if (i >= 0) {
+        return {
+          index: i,
+          label: Array.isArray(product.sizes) ? product.sizes[i] : null,
+        };
+      }
+    }
+    // 2) via query ?size=
     const imagesCount = Array.isArray(product.images) ? product.images.length : 0;
     const raw = searchParams.get("size");
     let index = 0;
-
     if (raw != null) {
       const byIndex = Number.parseInt(raw, 10);
       if (!Number.isNaN(byIndex)) {
@@ -30,12 +48,11 @@ function ProductDetail() {
         index = found >= 0 ? found : 0;
       }
     }
-
     const label = Array.isArray(product.sizes) ? product.sizes[index] : product.size || null;
     return { index, label };
-  }, [product, searchParams]);
+  }, [product, slug, searchParams]);
 
-  // ✅ image actuelle avec fallback sûr
+  // Image courante
   const currentImage = useMemo(() => {
     if (!product) return null;
     if (Array.isArray(product.images) && product.images.length > 0) {
@@ -44,10 +61,28 @@ function ProductDetail() {
     return product?.image || null;
   }, [product, sizeInfo.index]);
 
-  // ✅ libellé de taille
+  // Libellé de taille
   const sizeLabel = useMemo(() => sizeInfo.label, [sizeInfo.label]);
 
-  // ❌ si pas de produit
+  // URL canonique
+  const base = "https://natureolivart.netlify.app";
+  const preferredSlug =
+    slug || (product?.variantSlugs?.[sizeInfo.index]) || product?.slug || (product ? `products/${product.id}` : "");
+  const canonicalUrl = preferredSlug.startsWith("cuillere-")
+    ? `${base}/produit/${preferredSlug}`
+    : `${base}/${preferredSlug}`;
+
+  // Contrôles quantité
+  const inc = () => setQty((q) => q + 1);
+  const dec = () => setQty((q) => Math.max(1, q - 1));
+
+  // Ajout au panier + toast
+  const handleAddToCart = () => {
+    addItem(product, qty, { sizeLabel, image: currentImage });
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   if (!product) {
     return (
       <div className="container mx-auto py-12 px-4">
@@ -62,24 +97,41 @@ function ProductDetail() {
     );
   }
 
-  // Contrôles quantité
-  const inc = () => setQty((q) => q + 1);
-  const dec = () => setQty((q) => Math.max(1, q - 1));
+  // SEO dynamiques + JSON-LD
+  const pageTitle = `${product.name}${sizeLabel ? ` - ${sizeLabel}` : ""} | NaturOliv Art`;
+  const metaDescription =
+    product.description || `Découvrez ${product.name}${sizeLabel ? ` (${sizeLabel})` : ""} chez NaturOliv Art.`;
 
-  // Ajout au panier + toast
-  const handleAddToCart = () => {
-    addItem(product, qty, { sizeLabel, image: currentImage });
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name + (sizeLabel ? ` (${sizeLabel})` : ""),
+    description: product.description,
+    image: currentImage ? [currentImage] : undefined,
+    url: canonicalUrl,
+    sku: String(product.id),
+    brand: {
+      "@type": "Brand",
+      name: "NaturOliv Art",
+    },
   };
 
   return (
     <>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+
       {showToast && (
         <div
           role="status"
           aria-live="polite"
-          className="fixed top-4 right-4 z-50 bg-green-600 text-white px-4 py-2 rounded shadow-lg"
+          className="fixed z-50 bg-green-600 text-white px-4 py-2 rounded shadow-lg
+                     bottom-4 left-1/2 -translate-x-1/2
+                     md:top-4 md:right-4 md:bottom-auto md:left-auto md:translate-x-0"
         >
           Article ajouté au panier
         </div>
@@ -121,7 +173,7 @@ function ProductDetail() {
                   onChange={(e) =>
                     setQty(Math.max(1, parseInt(e.target.value || "1", 10)))
                   }
-                  className="w-16 text-center outline-none"
+                  className="w-20 md:w-16 text-center outline-none"
                   aria-label="Quantité"
                 />
                 <button

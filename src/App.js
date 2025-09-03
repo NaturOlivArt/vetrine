@@ -21,6 +21,8 @@ function App() {
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart />} />
+              {/* NEW: route SEO-friendly par slug */}
+              <Route path="/produit/:slug" element={<ProductDetail />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </main>

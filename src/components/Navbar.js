@@ -7,7 +7,7 @@ function Navbar() {
   const { count } = useCart();
 
   return (
-    <nav className="bg-wood-dark text-white p-1">
+    <nav className="bg-wood-dark text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold">
           NaturOliv Art
@@ -61,7 +61,7 @@ function Navbar() {
           >
             Panier
             {count > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {count}
               </span>
             )}
@@ -75,28 +75,28 @@ function Navbar() {
           <div className="px-2 pt-2 pb-4 space-y-1 bg-wood-dark">
             <Link
               to="/"
-              className="block px-3 py-2 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
+              className="block px-3 py-3 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
               onClick={() => setIsOpen(false)}
             >
               Accueil
             </Link>
             <Link
               to="/products"
-              className="block px-3 py-2 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
+              className="block px-3 py-3 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
               onClick={() => setIsOpen(false)}
             >
               Nos pièces
             </Link>
             <Link
               to="/contact"
-              className="block px-3 py-2 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
+              className="block px-3 py-3 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
               onClick={() => setIsOpen(false)}
             >
               Contact
             </Link>
             <Link
               to="/cart"
-              className="block px-3 py-2 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
+              className="block px-3 py-3 text-white hover:bg-wood-medium hover:text-wood-dark rounded transition duration-300"
               onClick={() => setIsOpen(false)}
             >
               Panier {count > 0 ? `(${count})` : ""}

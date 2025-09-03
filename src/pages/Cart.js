@@ -61,6 +61,7 @@ function Cart() {
             <img
               src={it.image}
               alt={it.name}
+              loading="lazy"
               className="w-full h-40 object-cover rounded"
             />
             <div>

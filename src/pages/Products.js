@@ -15,10 +15,11 @@ function Products() {
                 key={`${product.id}-${index}`}
                 className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <div className="h-64 overflow-hidden">
+                <div className="h-56 md:h-64 overflow-hidden">
                   <img
                     src={img}
                     alt={product.name}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                 </div>
@@ -34,7 +35,7 @@ function Products() {
                       </p>
                     </div>
                     <Link
-                      to={`/products/${product.id}?size=${index}`}
+                      to={`/produit/${product.variantSlugs?.[index] || `${product.slug}-${index}`}`}
                       className="bg-wood-dark text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-300"
                     >
                       Détails
@@ -48,10 +49,11 @@ function Products() {
               key={product.id}
               className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="h-64 overflow-hidden">
+              <div className="h-56 md:h-64 overflow-hidden">
                 <img
                   src={product.image}
                   alt={product.name}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
@@ -67,7 +69,7 @@ function Products() {
                     </p>
                   </div>
                   <Link
-                    to={`/products/${product.id}`}
+                    to={`/produit/${product.slug || product.id}`}
                     className="bg-wood-dark text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-300"
                   >
                     Détails

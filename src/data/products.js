@@ -6,6 +6,8 @@ import img15 from '../assets/images/15cm.jpg';
 export const products = [
   {
     id: 1,
+    slug: "cuillere-a-miel", // <-- nouveau: slug principal
+    variantSlugs: ["cuillere-a-miel-10cm", "cuillere-a-miel-12cm", "cuillere-a-miel-15cm"], // <-- nouveau: slugs par taille
     name: "Cuillère à Miel en bois d'olivier",
     images: [img10, img12, img15],
     sizes: ["10 cm", "12 cm", "15 cm"],
