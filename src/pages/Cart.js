@@ -41,23 +41,85 @@ function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-6 text-wood-dark dark:text-dark-secondary">
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-wood-dark dark:text-dark-secondary">
           Votre Panier
         </h1>
-        <p>Votre panier est vide.</p>
+        <p className="dark:text-gray-300">Votre panier est vide.</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6 text-wood-dark dark:text-dark-secondary">
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-wood-dark dark:text-dark-secondary">
         Votre Panier
       </h1>
 
-      {/* Tableau Panier */}
-      <div className="bg-white dark:bg-dark-secondary shadow-md rounded-lg overflow-hidden mb-10">
+      {/* Version mobile: Liste de cartes au lieu d'un tableau */}
+      <div className="md:hidden space-y-4 mb-8">
+        {items.map((it) => (
+          <div key={it.uid} className="bg-white dark:bg-dark-secondary shadow-md rounded-lg p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src={it.image}
+                alt={it.name}
+                className="w-16 h-16 object-cover rounded"
+              />
+              <div>
+                <h2 className="font-semibold text-wood-dark dark:text-dark-secondary">
+                  {it.name}
+                </h2>
+                {it.size && (
+                  <span className="text-sm text-gray-600 dark:text-gray-400">({it.size})</span>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-center mt-3">
+              <div className="flex items-center border rounded">
+                <button
+                  type="button"
+                  onClick={() => updateQty(it.uid, Math.max(1, it.qty - 1))}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-lg font-bold"
+                  aria-label="Diminuer la quantité"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min={1}
+                  value={it.qty}
+                  onChange={(e) =>
+                    updateQty(
+                      it.uid,
+                      Math.max(1, parseInt(e.target.value || "1", 10))
+                    )
+                  }
+                  className="w-12 text-center border-l border-r dark:bg-dark-secondary dark:text-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => updateQty(it.uid, it.qty + 1)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-lg font-bold"
+                  aria-label="Augmenter la quantité"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                onClick={() => removeItem(it.uid)}
+                className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 text-sm"
+              >
+                Retirer
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Version desktop: Tableau */}
+      <div className="hidden md:block bg-white dark:bg-dark-secondary shadow-md rounded-lg overflow-hidden mb-10">
         <table className="w-full">
           <thead className="bg-gray-100 dark:bg-gray-700">
             <tr>
@@ -79,7 +141,7 @@ function Cart() {
                     <h2 className="text-lg font-semibold text-wood-dark dark:text-dark-secondary">
                       {it.name}{" "}
                       {it.size ? (
-                        <span className="text-gray-600 text-base">({it.size})</span>
+                        <span className="text-gray-600 text-base dark:text-gray-400">({it.size})</span>
                       ) : null}
                     </h2>
                   </div>
@@ -103,7 +165,7 @@ function Cart() {
                           Math.max(1, parseInt(e.target.value || "1", 10))
                         )
                       }
-                      className="w-16 text-center border-l border-r dark:bg-dark-secondary"
+                      className="w-16 text-center border-l border-r dark:bg-dark-secondary dark:text-white"
                     />
                     <button
                       type="button"
@@ -129,20 +191,20 @@ function Cart() {
       </div>
 
       {/* Total */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-lg dark:text-gray-200">
           Total articles: <span className="font-semibold">{count}</span>
         </p>
         <button
           onClick={clear}
-          className="text-sm text-red-600 hover:underline"
+          className="text-sm text-red-600 hover:underline w-fit"
         >
           Vider le panier
         </button>
       </div>
 
       {/* Formulaire */}
-      <h2 className="text-2xl font-bold mb-4 text-wood-dark dark:text-dark-secondary">
+      <h2 className="text-xl md:text-2xl font-bold mb-4 text-wood-dark dark:text-dark-secondary">
         Vos informations
       </h2>
 
@@ -150,7 +212,7 @@ function Cart() {
         action={`https://formsubmit.co/${VOTRE_EMAIL_FORMSUBMIT}`}
         method="POST"
         onSubmit={contactMethod === "whatsapp" ? handleWhatsApp : undefined}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-dark-secondary p-6 rounded shadow"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 bg-white dark:bg-dark-secondary p-4 md:p-6 rounded shadow"
       >
         <input
           type="hidden"
@@ -160,14 +222,15 @@ function Cart() {
         <input type="hidden" name="_template" value="table" />
         <input type="hidden" name="panier" value={cartText} />
 
-        <div className="md:col-span-2 flex gap-6 mb-2">
-          <label className="flex items-center gap-2">
+        <div className="md:col-span-2 flex flex-col sm:flex-row sm:gap-6 mb-2">
+          <label className="flex items-center gap-2 mb-2 sm:mb-0">
             <input
               type="radio"
               name="contactMethod"
               value="email"
               checked={contactMethod === "email"}
               onChange={() => setContactMethod("email")}
+              className="w-5 h-5"
             />
             <span className="dark:text-gray-200">Envoyer par Email</span>
           </label>
@@ -178,6 +241,7 @@ function Cart() {
               value="whatsapp"
               checked={contactMethod === "whatsapp"}
               onChange={() => setContactMethod("whatsapp")}
+              className="w-5 h-5"
             />
             <span className="dark:text-gray-200">Envoyer par WhatsApp</span>
           </label>
@@ -188,7 +252,7 @@ function Cart() {
           <input
             name="nom"
             required
-            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
+            className="w-full border rounded px-3 py-3 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
         <div>
@@ -197,14 +261,14 @@ function Cart() {
             name="email"
             type="email"
             required={contactMethod === "email"}
-            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
+            className="w-full border rounded px-3 py-3 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
         <div>
           <label className="block text-sm mb-1 dark:text-gray-200">Téléphone</label>
           <input
             name="phone"
-            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
+            className="w-full border rounded px-3 py-3 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
         <div>
@@ -212,7 +276,7 @@ function Cart() {
           <textarea
             name="message"
             rows="4"
-            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
+            className="w-full border rounded px-3 py-3 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
 
@@ -220,14 +284,14 @@ function Cart() {
           {contactMethod === "email" ? (
             <button
               type="submit"
-              className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90"
+              className="w-full md:w-auto bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90 text-lg"
             >
               Envoyer la commande par Email
             </button>
           ) : (
             <button
               type="submit"
-              className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700"
+              className="w-full md:w-auto bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 text-lg"
             >
               Ouvrir WhatsApp et envoyer
             </button>
