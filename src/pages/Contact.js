@@ -26,14 +26,14 @@ function Contact() {
         />
       </Helmet>
       <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-8 text-center text-wood-dark">
+        <h1 className="text-3xl font-bold mb-8 text-center text-wood-dark dark:text-dark-secondary">
           Contactez-nous
         </h1>
 
-        <div className="max-w-3xl mx-auto bg-wood-light p-8 rounded-lg shadow-lg">
+        <div className="max-w-3xl mx-auto bg-wood-light dark:bg-dark-secondary p-8 rounded-lg shadow-lg">
           <div className="flex flex-col md:flex-row gap-8">
             <div className="md:w-1/2">
-              <h2 className="text-2xl font-bold mb-4 text-wood-dark">
+              <h2 className="text-2xl font-bold mb-4 text-wood-dark dark:text-dark-secondary">
                 Nos Coordonnées
               </h2>
 

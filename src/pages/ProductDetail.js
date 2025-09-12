@@ -3,6 +3,8 @@ import { products } from "../data/products";
 import { useState, useMemo } from "react";
 import { useCart } from "../context/CartContext";
 import { Helmet } from "react-helmet";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 function ProductDetail() {
   const { id, slug } = useParams();
@@ -15,15 +17,19 @@ function ProductDetail() {
   const productFromSlug = useMemo(() => {
     if (!slug) return null;
     return products.find(
-      (p) => p.slug === slug || (Array.isArray(p.variantSlugs) && p.variantSlugs.includes(slug))
+      (p) =>
+        p.slug === slug ||
+        (Array.isArray(p.variantSlugs) && p.variantSlugs.includes(slug))
     );
   }, [slug]);
 
-  const product = productFromSlug || products.find((p) => String(p.id) === String(id));
+  const product =
+    productFromSlug || products.find((p) => String(p.id) === String(id));
 
-  // Déduire l'index de variante (via slug en priorité), sinon query ?size=, sinon 0
+  // Déduire l'index de variante
   const sizeInfo = useMemo(() => {
     if (!product) return { index: 0, label: null };
+
     // 1) via slug exact
     if (slug && Array.isArray(product.variantSlugs)) {
       const i = product.variantSlugs.indexOf(slug);
@@ -34,6 +40,7 @@ function ProductDetail() {
         };
       }
     }
+
     // 2) via query ?size=
     const imagesCount = Array.isArray(product.images) ? product.images.length : 0;
     const raw = searchParams.get("size");
@@ -44,11 +51,17 @@ function ProductDetail() {
         index = Math.min(Math.max(0, byIndex), Math.max(0, imagesCount - 1));
       } else if (Array.isArray(product.sizes)) {
         const decoded = decodeURIComponent(raw).toLowerCase();
-        const found = product.sizes.findIndex((s) => s.toLowerCase() === decoded);
+        const found = product.sizes.findIndex(
+          (s) => s.toLowerCase() === decoded
+        );
         index = found >= 0 ? found : 0;
       }
     }
-    const label = Array.isArray(product.sizes) ? product.sizes[index] : product.size || null;
+
+    const label = Array.isArray(product.sizes)
+      ? product.sizes[index]
+      : product.size || null;
+
     return { index, label };
   }, [product, slug, searchParams]);
 
@@ -67,7 +80,10 @@ function ProductDetail() {
   // URL canonique
   const base = "https://natureolivart.netlify.app";
   const preferredSlug =
-    slug || (product?.variantSlugs?.[sizeInfo.index]) || product?.slug || (product ? `products/${product.id}` : "");
+    slug ||
+    product?.variantSlugs?.[sizeInfo.index] ||
+    product?.slug ||
+    (product ? `products/${product.id}` : "");
   const canonicalUrl = preferredSlug.startsWith("cuillere-")
     ? `${base}/produit/${preferredSlug}`
     : `${base}/${preferredSlug}`;
@@ -82,6 +98,15 @@ function ProductDetail() {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
+
+  // Images du produit pour le carrousel
+  const productImages = useMemo(() => {
+    if (!product) return [];
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      return product.images;
+    }
+    return product.image ? [product.image] : [];
+  }, [product]);
 
   if (!product) {
     return (
@@ -98,9 +123,14 @@ function ProductDetail() {
   }
 
   // SEO dynamiques + JSON-LD
-  const pageTitle = `${product.name}${sizeLabel ? ` - ${sizeLabel}` : ""} | NaturOliv Art`;
+  const pageTitle = `${product.name}${
+    sizeLabel ? ` - ${sizeLabel}` : ""
+  } | NaturOliv Art`;
   const metaDescription =
-    product.description || `Découvrez ${product.name}${sizeLabel ? ` (${sizeLabel})` : ""} chez NaturOliv Art.`;
+    product.description ||
+    `Découvrez ${product.name}${
+      sizeLabel ? ` (${sizeLabel})` : ""
+    } chez NaturOliv Art.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -122,7 +152,9 @@ function ProductDetail() {
         <title>{pageTitle}</title>
         <meta name="description" content={metaDescription} />
         <link rel="canonical" href={canonicalUrl} />
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
       </Helmet>
 
       {showToast && (
@@ -131,30 +163,64 @@ function ProductDetail() {
           aria-live="polite"
           className="fixed z-50 bg-green-600 text-white px-4 py-2 rounded shadow-lg
                      bottom-4 left-1/2 -translate-x-1/2
-                     md:top-4 md:right-4 md:bottom-auto md:left-auto md:translate-x-0"
+                     md:top-4 md:right-4 md:bottom-auto md:left-auto md:translate-x-0
+                     toast-notification"
         >
           Article ajouté au panier
         </div>
       )}
+
       <div className="container mx-auto py-12 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Image à gauche */}
+          {/* Carrousel d'images */}
           <div>
-            {currentImage && (
-              <img
-                src={currentImage}
-                alt={product.name}
-                className="w-full h-auto rounded-lg shadow-lg object-cover"
-              />
+            {productImages.length > 0 && (
+              <div className="rounded-lg overflow-hidden shadow-lg">
+                <Carousel
+                  showArrows={true}
+                  showStatus={false}
+                  showThumbs={productImages.length > 1}
+                  infiniteLoop={true}
+                  selectedItem={sizeInfo.index}
+                  onClickItem={(index) => {
+                    if (product.sizes && product.sizes[index]) {
+                      setQty(1);
+                    }
+                  }}
+                  className="bg-gray-100 dark:bg-gray-800"
+                >
+                  {productImages.map((img, idx) => (
+                    <div key={idx} className="carousel-image-container">
+                      <img
+                        src={img}
+                        alt={`${product.name} - ${
+                          product.sizes ? product.sizes[idx] || "" : ""
+                        }`}
+                        className="w-full h-auto object-cover"
+                      />
+                      {product.sizes && product.sizes[idx] && (
+                        <p className="legend">{product.sizes[idx]}</p>
+                      )}
+                    </div>
+                  ))}
+                </Carousel>
+              </div>
             )}
           </div>
 
-          {/* Titre + description à droite */}
+          {/* Informations produit */}
           <div>
-            <h1 className="text-3xl font-bold text-wood-dark mb-2">{product.name}</h1>
-            {sizeLabel && <p className="text-gray-600 mb-4">Taille: {sizeLabel}</p>}
-            <p className="text-gray-700 mb-6">{product.description}</p>
+            <h1 className="text-3xl font-bold text-wood-dark mb-2 dark:text-dark-secondary">
+              {product.name}
+            </h1>
+            {sizeLabel && (
+              <b><p className="text-gray-600 mb-4" style={{color : 'red'}}>Taille: {sizeLabel}</p></b>
+            )}
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
+              {product.description}
+            </p>
 
+            {/* Quantité */}
             <div className="flex items-center gap-3 mb-6">
               <label className="text-gray-700">Quantité</label>
               <div className="inline-flex items-stretch border border-gray-300 rounded overflow-hidden">
@@ -171,7 +237,9 @@ function ProductDetail() {
                   min={1}
                   value={qty}
                   onChange={(e) =>
-                    setQty(Math.max(1, parseInt(e.target.value || "1", 10)))
+                    setQty(
+                      Math.max(1, parseInt(e.target.value || "1", 10))
+                    )
                   }
                   className="w-20 md:w-16 text-center outline-none"
                   aria-label="Quantité"
@@ -187,6 +255,7 @@ function ProductDetail() {
               </div>
             </div>
 
+            {/* Boutons panier */}
             <button
               onClick={handleAddToCart}
               className="bg-wood-dark text-white px-6 py-3 rounded hover:bg-opacity-90 transition duration-300 mr-4"

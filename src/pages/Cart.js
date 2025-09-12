@@ -42,7 +42,9 @@ function Cart() {
   if (items.length === 0) {
     return (
       <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-6 text-wood-dark">Votre Panier</h1>
+        <h1 className="text-3xl font-bold mb-6 text-wood-dark dark:text-dark-secondary">
+          Votre Panier
+        </h1>
         <p>Votre panier est vide.</p>
       </div>
     );
@@ -50,73 +52,85 @@ function Cart() {
 
   return (
     <div className="container mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6 text-wood-dark">Votre Panier</h1>
+      <h1 className="text-3xl font-bold mb-6 text-wood-dark dark:text-dark-secondary">
+        Votre Panier
+      </h1>
 
-      <div className="space-y-4 mb-10">
-        {items.map((it) => (
-          <div
-            key={it.uid}
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center bg-white p-4 rounded shadow"
-          >
-            <img
-              src={it.image}
-              alt={it.name}
-              loading="lazy"
-              className="w-full h-40 object-cover rounded"
-            />
-            <div>
-              <h2 className="text-xl font-semibold text-wood-dark">
-                {it.name}{" "}
-                {it.size ? (
-                  <span className="text-gray-600 text-base">({it.size})</span>
-                ) : null}
-              </h2>
-              <div className="mt-2 flex items-center gap-3">
-                <label>Quantité</label>
-                <div className="flex items-center border rounded">
-                  <button
-                    type="button"
-                    onClick={() => updateQty(it.uid, Math.max(1, it.qty - 1))}
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-l"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    min={1}
-                    value={it.qty}
-                    onChange={(e) =>
-                      updateQty(
-                        it.uid,
-                        Math.max(1, parseInt(e.target.value || "1", 10))
-                      )
-                    }
-                    className="w-16 text-center border-l border-r"
+      {/* Tableau Panier */}
+      <div className="bg-white dark:bg-dark-secondary shadow-md rounded-lg overflow-hidden mb-10">
+        <table className="w-full">
+          <thead className="bg-gray-100 dark:bg-gray-700">
+            <tr>
+              <th className="py-3 px-4 text-left text-wood-dark dark:text-dark-secondary">Produit</th>
+              <th className="py-3 px-4 text-left text-wood-dark dark:text-dark-secondary">Quantité</th>
+              <th className="py-3 px-4 text-left text-wood-dark dark:text-dark-secondary">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((it) => (
+              <tr key={it.uid} className="border-b dark:border-gray-600">
+                <td className="py-3 px-4 flex items-center gap-4">
+                  <img
+                    src={it.image}
+                    alt={it.name}
+                    className="w-20 h-20 object-cover rounded"
                   />
+                  <div>
+                    <h2 className="text-lg font-semibold text-wood-dark dark:text-dark-secondary">
+                      {it.name}{" "}
+                      {it.size ? (
+                        <span className="text-gray-600 text-base">({it.size})</span>
+                      ) : null}
+                    </h2>
+                  </div>
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex items-center border rounded w-fit">
+                    <button
+                      type="button"
+                      onClick={() => updateQty(it.uid, Math.max(1, it.qty - 1))}
+                      className="px-3 py-1 bg-gray-200 hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      min={1}
+                      value={it.qty}
+                      onChange={(e) =>
+                        updateQty(
+                          it.uid,
+                          Math.max(1, parseInt(e.target.value || "1", 10))
+                        )
+                      }
+                      className="w-16 text-center border-l border-r dark:bg-dark-secondary"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => updateQty(it.uid, it.qty + 1)}
+                      className="px-3 py-1 bg-gray-200 hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td className="py-3 px-4">
                   <button
-                    type="button"
-                    onClick={() => updateQty(it.uid, it.qty + 1)}
-                    className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-r"
+                    onClick={() => removeItem(it.uid)}
+                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                   >
-                    +
+                    Retirer
                   </button>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end">
-              <button
-                onClick={() => removeItem(it.uid)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 h-fit"
-              >
-                Retirer
-              </button>
-            </div>
-          </div>
-        ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
+      {/* Total */}
       <div className="mb-6 flex items-center justify-between">
-        <p className="text-lg">
+        <p className="text-lg dark:text-gray-200">
           Total articles: <span className="font-semibold">{count}</span>
         </p>
         <button
@@ -127,7 +141,8 @@ function Cart() {
         </button>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4 text-wood-dark">
+      {/* Formulaire */}
+      <h2 className="text-2xl font-bold mb-4 text-wood-dark dark:text-dark-secondary">
         Vos informations
       </h2>
 
@@ -135,9 +150,8 @@ function Cart() {
         action={`https://formsubmit.co/${VOTRE_EMAIL_FORMSUBMIT}`}
         method="POST"
         onSubmit={contactMethod === "whatsapp" ? handleWhatsApp : undefined}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded shadow"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-dark-secondary p-6 rounded shadow"
       >
-        {/* Formsubmit configuration */}
         <input
           type="hidden"
           name="_subject"
@@ -155,7 +169,7 @@ function Cart() {
               checked={contactMethod === "email"}
               onChange={() => setContactMethod("email")}
             />
-            <span>Envoyer par Email</span>
+            <span className="dark:text-gray-200">Envoyer par Email</span>
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -165,37 +179,40 @@ function Cart() {
               checked={contactMethod === "whatsapp"}
               onChange={() => setContactMethod("whatsapp")}
             />
-            <span>Envoyer par WhatsApp</span>
+            <span className="dark:text-gray-200">Envoyer par WhatsApp</span>
           </label>
         </div>
 
         <div>
-          <label className="block text-sm mb-1">Nom</label>
+          <label className="block text-sm mb-1 dark:text-gray-200">Nom</label>
           <input
             name="nom"
             required
-            className="w-full border rounded px-3 py-2"
+            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Email</label>
+          <label className="block text-sm mb-1 dark:text-gray-200">Email</label>
           <input
             name="email"
             type="email"
             required={contactMethod === "email"}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Téléphone</label>
-          <input name="phone" className="w-full border rounded px-3 py-2" />
+          <label className="block text-sm mb-1 dark:text-gray-200">Téléphone</label>
+          <input
+            name="phone"
+            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
+          />
         </div>
         <div>
-          <label className="block text-sm mb-1">Message</label>
+          <label className="block text-sm mb-1 dark:text-gray-200">Message</label>
           <textarea
             name="message"
             rows="4"
-            className="w-full border rounded px-3 py-2"
+            className="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-gray-200"
           />
         </div>
 

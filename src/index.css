@@ -7,3 +7,22 @@ body {
   background-color: #f5f0e1;
   color: #5c4033;
 }
+
+/* Styles pour le mode sombre */
+.dark body {
+  background-color: #1a202c;
+  color: #f5f0e1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Classes utilitaires pour les polices */
+.font-title {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-body {
+  font-family: 'Roboto', sans-serif;
+}
