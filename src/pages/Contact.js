@@ -104,11 +104,9 @@ function Contact() {
                   <div>
                     <h3 className="font-semibold">Adresse de l'atelier</h3>
                     <p className="text-gray-700">
-                      15 Rue des Oliviers
+                      Route saltnia, Km 7, sfax
                       <br />
-                      Sidi Bou Said
-                      <br />
-                      2026 Tunis, Tunisie
+                      2025 sfax, Tunisie
                     </p>
                   </div>
                 </div>
