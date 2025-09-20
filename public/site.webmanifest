@@ -1,1 +1,23 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "NaturOliv Art - Artisanat tunisien en bois d'olivier",
+  "short_name": "NaturOliv Art",
+  "description": "Découvrez nos créations artisanales en bois d'olivier tunisien: cuillères à miel, ustensiles de cuisine et objets décoratifs naturels.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#8b4513",
+  "background_color": "#f5f0e1",
+  "display": "standalone",
+  "start_url": "/",
+  "lang": "fr-FR",
+  "categories": ["shopping", "lifestyle", "home"]
+}

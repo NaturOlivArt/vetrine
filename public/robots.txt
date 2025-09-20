@@ -1,3 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /404
+Disallow: /error
+
+# Priorité de crawl
+Crawl-delay: 1
+
+# Sitemap
 Sitemap: https://natureolivart.netlify.app/sitemap.xml
